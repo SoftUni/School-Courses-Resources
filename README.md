@@ -1,2 +1,2 @@
 # School-Courses-Resources
-Public Resources for the "SoftUni Svetlina" School Courses
+Public resources for the "SoftUni Svetlina" school courses: scripts, files, documents, etc.
