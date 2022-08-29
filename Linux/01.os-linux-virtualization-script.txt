@@ -3,7 +3,7 @@
 #
 # Check Script 
 # for Homework N.1
-# from the "Operating System and Linux" course
+# from the "Operating Systems and Linux" course
 # 
 
 if [ -n $app ]; then 
