@@ -1,8 +1,9 @@
 #!/bin/bash
 
 #
-# Homework Check Script 
-# for LSA 2021.11 / M1
+# Check Script 
+# for Homework N.1
+# from the "Operating System and Linux" course
 # 
 
 if [ -n $app ]; then 
@@ -33,67 +34,49 @@ if [ $? -eq 0 ]; then distro=Debian; fi
 
 echo "* Working on $distro-based machine"
 
-echo '{' > /tmp/hw.log
+echo "\"family\": \"$distro\","
 
-echo "\"date\": \"$(date '+%Y-%m-%d %H:%M:%S')\"," >> /tmp/hw.log
+echo "\"distribution\": $(grep PRETTY_NAME /etc/os-release | cut -d = -f 2), "
 
-echo "\"family\": \"$distro\"," >> /tmp/hw.log
+echo "\"module\": 1,"
 
-echo "\"distribution\": $(grep PRETTY_NAME /etc/os-release | cut -d = -f 2), " >> /tmp/hw.log
-
-echo "\"module\": 1," >> /tmp/hw.log
-
-echo "\"tests\": [" >> /tmp/hw.log
+echo "\"tests\": ["
 
 tt='Testing for a desktop environment installed and in use'
 echo '* '$tt' ...'
 tf=$XDG_CURRENT_DESKTOP
 echo $tf | grep -i -E 'cinnamon|gnome|kde|lxde|lxqt|mate|xfce' &> /dev/null
 if [ $? -eq 0 ]; then tr='PASS'; else tr='ERROR'; fi
+echo "{\"id\": 1, \"name\": \"$tt\", \"found\": \"$tf\", \"result\": \"$tr\"},"
 echo '... '$tr
-echo "{\"id\": 1, \"name\": \"$tt\", \"found\": \"$tf\", \"result\": \"$tr\"}," >> /tmp/hw.log
-
 
 tt='Testing for a host named after the distribution'
 echo '* '$tt' ...'
 tf=$(hostname -s)
 grep $tf /etc/os-release &> /dev/null
 if [ $? -eq 0 ]; then tr='PASS'; else tr='ERROR'; fi
+echo "{\"id\": 2, \"name\": \"$tt\", \"found\": \"$tf\", \"result\": \"$tr\"},"
 echo '... '$tr
-echo "{\"id\": 2, \"name\": \"$tt\", \"found\": \"$tf\", \"result\": \"$tr\"}," >> /tmp/hw.log
-
 
 tt='Testing for the domain name of the host'
 echo '* '$tt' ...'
 tf=$(hostname -f)
 echo $tf | grep lsa.lab &> /dev/null
 if [ $? -eq 0 ]; then tr='PASS'; else tr='ERROR'; fi
+echo "{\"id\": 3, \"name\": \"$tt\", \"found\": \"$tf\", \"result\": \"$tr\"},"
 echo '... '$tr
-echo "{\"id\": 3, \"name\": \"$tt\", \"found\": \"$tf\", \"result\": \"$tr\"}," >> /tmp/hw.log
-
 
 tt='Testing for a regular user #1'
 echo '* '$tt' ...'
 tf=$(id -u)
 if [ $(id -u) -ge 1000 ]; then tr='PASS'; else tr='ERROR'; fi
+echo "{\"id\": 4, \"name\": \"$tt\", \"found\": \"$tf\", \"result\": \"$tr\"},"
 echo '... '$tr
-echo "{\"id\": 4, \"name\": \"$tt\", \"found\": \"$tf\", \"result\": \"$tr\"}," >> /tmp/hw.log
-
 
 tt='Testing for a regular user #2'
 echo '* '$tt' ...'
 tf=$USER 
 cut -d : -f 5 /etc/passwd | grep -i $USER &> /dev/null
 if [ $? -eq 0 ]; then tr='PASS'; else tr='ERROR'; fi
+echo "{\"id\": 5, \"name\": \"$tt\", \"found\": \"$tf\", \"result\": \"$tr\"}"
 echo '... '$tr
-echo "{\"id\": 5, \"name\": \"$tt\", \"found\": \"$tf\", \"result\": \"$tr\"}" >> /tmp/hw.log
-
-echo "]" >> /tmp/hw.log
-
-echo '}' >> /tmp/hw.log
-
-if [ $app == 'curl' ]; then
-  curl --request POST --url https://courses.zahariev.pro/ --header 'content-type: application/json' --data @/tmp/hw.log
-else
-  wget --quiet --method POST --header 'content-type: application/json' --body-file=/tmp/hw.log --output-document - https://courses.zahariev.pro/
-fi
