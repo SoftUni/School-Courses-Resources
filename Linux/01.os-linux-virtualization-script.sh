@@ -50,9 +50,9 @@ if [ $? -eq 0 ]; then tr='PASS'; else tr='ERROR'; fi
 echo found: \"$tf\"
 echo ... $tr
 
-tt='Testing for the domain name of the host'
+tt='Testing for the full name of the host'
 echo '* '$tt' ...'
-tf=$(hostname -f)
+tf=$(hostname)
 echo $tf | grep lsa.lab &> /dev/null
 if [ $? -eq 0 ]; then tr='PASS'; else tr='ERROR'; fi
 echo found: \"$tf\"
