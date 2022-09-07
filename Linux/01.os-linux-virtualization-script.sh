@@ -54,7 +54,8 @@ tt='Testing for the full name of the host'
 echo '* '$tt' ...'
 tf=$(hostname)
 echo $tf | grep lsa.lab &> /dev/null
-if [ $? -eq 0 ]; then tf=$(hostname -f); fi
+if [ $? -eq 1 ]; then tf=$(hostname -f); fi
+echo $tf | grep lsa.lab &> /dev/null
 if [ $? -eq 0 ]; then tr='PASS'; else tr='ERROR'; fi
 echo found: \"$tf\"
 echo ... $tr
